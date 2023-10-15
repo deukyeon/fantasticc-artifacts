@@ -12,32 +12,15 @@ available_systems = [
     'tictoc-memory',
     'tictoc-counter',
     'tictoc-sketch',
-    'sto-disk',
     'sto-sketch',
     'sto-counter',
     'sto-memory',
     '2pl-no-wait',
-    '2pl-wait-die',
-    '2pl-wound-wait'
 ]
 
-system_branch_map = {
-    'splinterdb': 'deukyeon/fantastiCC-refactor',
-    'tictoc-disk': 'deukyeon/fantastiCC-refactor',
-    'silo-disk': 'deukyeon/silo-disk',
-    'baseline-serial': 'deukyeon/baseline',
-    'baseline-parallel': 'deukyeon/baseline',
-    'silo-memory': 'deukyeon/fantastiCC-refactor',
-    'tictoc-memory': 'deukyeon/fantastiCC-refactor',
-    'tictoc-counter': 'deukyeon/fantastiCC-refactor',
-    'tictoc-sketch': 'deukyeon/fantastiCC-refactor',
-    'sto-disk': 'deukyeon/fantastiCC-refactor',
-    'sto-sketch': 'deukyeon/fantastiCC-refactor',
-    'sto-counter': 'deukyeon/fantastiCC-refactor',
-    'sto-memory': 'deukyeon/fantastiCC-refactor',
-    '2pl-no-wait': 'deukyeon/fantastiCC-refactor',
-    '2pl-wait-die': 'deukyeon/fantastiCC-refactor',
-    '2pl-wound-wait': 'deukyeon/fantastiCC-refactor'
+system_dir_map = {
+    'baseline-serial': 'splinterdb-for-occ',
+    'baseline-parallel': 'splinterdb-for-occ',
 }
 
 system_sed_map = {
@@ -58,21 +41,21 @@ system_sed_map = {
 
 class ExpSystem:
     @staticmethod
-    def build(sys, splinterdb_dir):
-
+    def build(sys):
 
         def run_cmd(cmd):
             subprocess.call(cmd, shell=True)
-        
 
         os.environ['CC'] = 'clang'
         os.environ['LD'] = 'clang'
         current_dir = os.getcwd()
-        run_cmd(f'tar czf splinterdb-backup-{time.time()}.tar.gz {splinterdb_dir}')
+        if sys in system_dir_map:
+            splinterdb_dir = f'../{system_dir_map[sys]}'
+        else:
+            splinterdb_dir = '../splinterdb'
         os.chdir(splinterdb_dir)
-        run_cmd('git checkout -- .')
-        run_cmd(f'git checkout {system_branch_map[sys]}')
         run_cmd('sudo -E make clean')
+        run_cmd('git checkout src')
         if sys in system_sed_map:
             for sed in system_sed_map[sys]:
                 run_cmd(sed)

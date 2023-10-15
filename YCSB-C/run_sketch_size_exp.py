@@ -88,7 +88,6 @@ if not os.path.exists(results_path):
 results_path = os.path.join(results_path, f"{label}")
 os.mkdir(results_path)
 
-# assume the branch of splinterdb is deukyeon/fantastiCC-refactor
 os.chdir(splinterdb_path)
 run_cmd("git checkout src/experimental_mode.h")
 run_cmd("sed -i 's/#define EXPERIMENTAL_MODE_TICTOC_SKETCH [ ]*0/#define EXPERIMENTAL_MODE_TICTOC_SKETCH 1/g' src/experimental_mode.h")

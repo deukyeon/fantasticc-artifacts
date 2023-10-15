@@ -221,7 +221,7 @@ def main(argc, argv):
         parse()
         return
 
-    ExpSystem.build(system, '../splinterdb')
+    ExpSystem.build(system)
 
     db = 'splinterdb' if system == 'splinterdb' else 'transactional_splinterdb'
     
